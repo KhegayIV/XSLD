@@ -1,4 +1,4 @@
-package ru.nsu.xsld;
+package ru.nsu.xsld.interpreters;
 
 import com.sun.istack.internal.Nullable;
 

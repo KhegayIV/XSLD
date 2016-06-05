@@ -1,4 +1,4 @@
-package ru.nsu.xsld;
+package ru.nsu.xsld.interpreters;
 
 /**
  * Interface that catches all errors, found during validation

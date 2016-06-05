@@ -2,11 +2,12 @@ package ru.nsu.xsld;
 
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
-import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import ru.nsu.xsld.interpreters.ErrorInterpreter;
+import ru.nsu.xsld.interpreters.PredicateInterpreter;
+import ru.nsu.xsld.interpreters.XsldErrorListener;
 
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
@@ -22,8 +23,7 @@ import java.util.List;
  */
 public class XSLD {
 
-    private List<ErrorInterpreter> errorInterpreters = new ArrayList<>();
-    private List<PredicateInterpreter> predicateInterpreters = new ArrayList<>();
+    private RuleChecker ruleChecker;
 
     /**
      * Creates XSLD schema from file
@@ -32,7 +32,7 @@ public class XSLD {
      * @throws IOException
      */
     public XSLD(@NotNull File file)  throws XsldException, IOException{
-        throw new RuntimeException("Not implemented");
+        throw new RuntimeException("Not implemented"); //TODO
     }
 
 
@@ -42,7 +42,7 @@ public class XSLD {
      * @throws XsldException if node provided is not XSLD
      */
     public XSLD(@NotNull Node node) throws XsldException {
-        throw new RuntimeException("Not implemented");
+        throw new RuntimeException("Not implemented"); //TODO
     }
 
     /**
@@ -68,7 +68,7 @@ public class XSLD {
      * @return true if file matches schema
      */
     public boolean verify(@NotNull File file, @Nullable XsldErrorListener listener) throws IOException{
-        throw new RuntimeException("Not implemented");
+        throw new RuntimeException("Not implemented"); //TODO
     }
 
     /**
@@ -78,20 +78,20 @@ public class XSLD {
      * @return true if XML matches schema
      */
     public boolean verify(@NotNull Node node, @Nullable XsldErrorListener listener){
-        throw new RuntimeException("Not implemented");
+        throw new RuntimeException("Not implemented"); //TODO
     }
 
     /**
      * Add error interpreter to schema
      */
     public void addErrorInterpreter(ErrorInterpreter interpreter){
-        errorInterpreters.add(interpreter);
+        ruleChecker.addErrorInterpreter(interpreter);
     }
 
     /**
      * Add predicate interpreter to schema
      */
     public void addPredicateInterpreter(PredicateInterpreter interpreter){
-        predicateInterpreters.add(interpreter);
+        ruleChecker.addPredicateInterpreter(interpreter);
     }
 }
