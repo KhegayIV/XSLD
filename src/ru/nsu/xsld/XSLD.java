@@ -5,7 +5,7 @@ import com.sun.istack.internal.Nullable;
 import org.w3c.dom.Node;
 import ru.nsu.xsld.interpreters.ErrorInterpreter;
 import ru.nsu.xsld.interpreters.PredicateInterpreter;
-import ru.nsu.xsld.interpreters.XsldErrorListener;
+import ru.nsu.xsld.interpreters.ErrorListener;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -15,8 +15,6 @@ import javax.xml.transform.stream.StreamSource;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Class representing XSLD schema
@@ -67,7 +65,7 @@ public class XSLD {
      * @throws IOException
      * @return true if file matches schema
      */
-    public boolean verify(@NotNull File file, @Nullable XsldErrorListener listener) throws IOException{
+    public boolean verify(@NotNull File file, @Nullable ErrorListener listener) throws IOException{
         throw new RuntimeException("Not implemented"); //TODO
     }
 
@@ -77,7 +75,7 @@ public class XSLD {
      * @param listener error listener. Can be null
      * @return true if XML matches schema
      */
-    public boolean verify(@NotNull Node node, @Nullable XsldErrorListener listener){
+    public boolean verify(@NotNull Node node, @Nullable ErrorListener listener){
         throw new RuntimeException("Not implemented"); //TODO
     }
 
