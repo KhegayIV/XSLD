@@ -9,7 +9,7 @@ public class LabelMap {
     public String getLabelByPath(Path path){
         throw new RuntimeException("Not implemented"); //TODO
     }
-    public Collection<Path> getPathByLabel(String label){
+    public Collection<UnresolvedPath> getPathByLabel(String label){
         throw new RuntimeException("Not implemented"); // TODO
     }
 }

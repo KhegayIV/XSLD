@@ -15,6 +15,24 @@
 
     <xs:complexType name="accountType">
         <xs:sequence>
+            <xs:element name="test">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="test1" xl:label="test1"/>
+                        <xs:element name="test2" xl:label="test2"/>
+                        <xs:element name="test3" xl:label="test3">
+                            <xs:complexType>
+                                <xs:all>
+                                    <xs:element name="test4"  xl:label="test4"/>
+                                    <xs:element name="test5"  xl:label="test5"/>
+                                </xs:all>
+                                <xs:attribute name="test6"  xl:label="test6"/>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
             <xs:element name="id">
                 <xs:simpleType>
                     <xs:restriction base="xs:string">
