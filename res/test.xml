@@ -1,0 +1,52 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xl="xsld.nsu.ru">
+    <xl:check signature="isINN()"/>
+    <xl:error signature="innError()"/>
+    <xl:error signature="balanceCurrencyError(balance, balanceUSD)"/>
+    <xl:substitution name="OrganisationCantHavePersonName" locale="RU" value="Юридическое лицо {0} не может иметь ФИО"/>
+    <xl:substitution name="PersonMustHaveFirstName" locale="RU" value="Физическое лицо должно иметь имя"/>
+
+    <xs:element name="accountList" type="accountListType"/>
+
+    <xs:complexType name="accountListType">
+        <xs:sequence>
+            <xs:element name="account" maxOccurs="unbounded" minOccurs="0" type="accountType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="accountType">
+        <xs:sequence>
+            <xs:element name="id">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:pattern value="\d{6}-\w"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element type="xs:long" name="INN" xl:label="INN">
+                <xl:assert test="isINN()" error="innError()"/>
+            </xs:element>
+            <xs:element type="xs:short" name="balance" xl:label="balanceInCurrency">
+                <xl:assert value="balanceInUSD" if="currency = 'USD'"
+                           error="balanceCurrencyError(balanceInCurrency, balanceInUSD)"/>
+            </xs:element>
+            <xs:element type="xs:string" name="currency" xl:label="currency"/>
+            <xs:element type="xs:byte" name="balanceUSD" xl:label="balanceInUSD"/>
+            <xs:element type="xs:string" name="lastName" minOccurs="0" xl:label="personLastName">
+                <xl:allow if="organisationName = ''" error="OrganisationCantHavePersonName(organisationName)"/>
+            </xs:element>
+            <xs:element type="xs:string" name="firstName" minOccurs="0">
+                <xl:allow if="organisationName = ''" error="OrganisationCantHavePersonName(organisationName)"/>
+                <xl:require if="personLastName != ''" error="PersonMustHaveFirstName(personLastName)"/>
+            </xs:element>
+            <xs:element type="xs:string" name="middleName" minOccurs="0">
+                <xl:allow if="organisationName = ''" error="OrganisationCantHavePersonName(organisationName)"/>
+            </xs:element>
+            <xs:element type="xs:string" name="orgName" minOccurs="0" xl:label="organisationName"/>
+            <xs:element type="xs:string" name="orgAddress" minOccurs="0">
+                <xl:require if="organisationName != ''" error="OrganisationMustHaveAddress(organisationName)"/>
+                <xl:allow if="personLastName = ''" error="'Для физического лица не должен быть указан адрес'"/>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
+
