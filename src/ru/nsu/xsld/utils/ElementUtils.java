@@ -4,9 +4,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import ru.nsu.xsld.parsing.Path;
+import ru.nsu.xsld.parsing.UnresolvedPath;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -50,14 +54,22 @@ public abstract class ElementUtils {
                 (parent, part) -> parent.flatMap(it -> orderedChild(it, namespaceURI, part.name, part.order)));
     }
 
-    public static Optional<String> getValueByPath(Element root, String namespaceURI, Path path){
+    public static Optional<String> getValueByPath(Element root, String namespaceURI, Path path) {
         Path.Part last = path.last();
-        if (!last.name.startsWith(ATTR_PREFIX)){
+        if (!last.name.startsWith(ATTR_PREFIX)) {
             return getElementByPath(root, namespaceURI, path).map(Node::getTextContent);
         } else {
             return Optional.ofNullable(getElementByPath(root, namespaceURI, path.parent())
                     .orElse(root).getAttribute(last.name.substring(1)));
         }
+    }
+
+    public static boolean isAttribute(UnresolvedPath path){
+        return path.last().startsWith(ATTR_PREFIX);
+    }
+
+    public static boolean isAttribute(Path path){
+        return path.last().name.startsWith(ATTR_PREFIX);
     }
 
     public static class NodeListIterator<T extends Node> implements Iterator<T>, Iterable<T> {

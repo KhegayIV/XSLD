@@ -5,10 +5,8 @@ import org.xml.sax.SAXException;
 import ru.nsu.xsld.interpreters.ErrorInterpreter;
 import ru.nsu.xsld.interpreters.ErrorListener;
 import ru.nsu.xsld.interpreters.PredicateInterpreter;
-import ru.nsu.xsld.parsing.ElementResolver;
-import ru.nsu.xsld.parsing.LabelMap;
-import ru.nsu.xsld.parsing.Path;
-import ru.nsu.xsld.parsing.XsldParser;
+import ru.nsu.xsld.parsing.*;
+import ru.nsu.xsld.utils.ElementUtils;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -96,6 +94,13 @@ public class XSLD {
         Path path = new Path().append("root",0).append("elem2",0).append("elem3",0);
         System.out.println(resolver.getValue("attr", path).orElse(null));
         System.out.println(resolver.getValue("labeledElement", path).orElse(null));
+        resolver.resolvePath(UnresolvedPath.of("root", "elem2", "elem4")).forEach(
+                System.out::println
+        );
+        resolver.resolvePath(UnresolvedPath.of("root", "elem2", "@attr2")).forEach(
+                System.out::println
+        );
+
         System.out.println(123);
         throw new RuntimeException("Not implemented"); // TODO
     }

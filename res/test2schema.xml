@@ -17,13 +17,15 @@
     </xs:element>
 
     <xs:complexType name="elem2type">
-        <xs:all>
+        <xs:sequence>
             <xs:element name="label" type="xs:string" xl:label="labeledElement"/>
             <xs:element name="elem3" type="xs:string" xl:label="referencer">
                 <xl:assert test="someCheck(labeledElement)" error="someError(labeledElement)"/>
                 <xl:assert test="false" error="sub('123123')"/>
             </xs:element>
-        </xs:all>
+            <xs:element name="elem4" type="xs:int" minOccurs="0" maxOccurs="unbounded" xl:label="elem4" />
+        </xs:sequence>
+        <xs:attribute name="attr2"/>
     </xs:complexType>
 </xs:schema>
 

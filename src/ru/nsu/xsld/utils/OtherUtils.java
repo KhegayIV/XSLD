@@ -37,4 +37,14 @@ public abstract class OtherUtils {
         }
         return Path.of(result);
     }
+
+    public static class Pair<Left, Right>{
+        public final Left first;
+        public final Right second;
+
+        public Pair(Left first, Right second) {
+            this.first = first;
+            this.second = second;
+        }
+    }
 }
