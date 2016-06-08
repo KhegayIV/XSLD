@@ -1,6 +1,6 @@
 package ru.nsu.xsld.parsing;
 
-import ru.nsu.xsld.utills.OtherUtils;
+import ru.nsu.xsld.utils.OtherUtils;
 
 import java.util.*;
 

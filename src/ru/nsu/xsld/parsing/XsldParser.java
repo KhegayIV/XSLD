@@ -2,20 +2,20 @@ package ru.nsu.xsld.parsing;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
-import ru.nsu.xsld.utills.ElementUtils;
+import ru.nsu.xsld.utils.ElementUtils;
 import ru.nsu.xsld.XsldException;
 import ru.nsu.xsld.rules.Rule;
 import ru.nsu.xsld.rules.xsldrules.AllowRule;
 import ru.nsu.xsld.rules.xsldrules.AssertRule;
 import ru.nsu.xsld.rules.xsldrules.RequireRule;
 import ru.nsu.xsld.rules.xsldrules.TypeAssertRule;
-import ru.nsu.xsld.utills.StreamUtils;
+import ru.nsu.xsld.utils.StreamUtils;
 
 import java.util.*;
 import java.util.stream.Stream;
 
-import static ru.nsu.xsld.utills.ElementUtils.XSD_NAMESPACE;
-import static ru.nsu.xsld.utills.ElementUtils.XSLD_NAMESPACE;
+import static ru.nsu.xsld.utils.ElementUtils.XSD_NAMESPACE;
+import static ru.nsu.xsld.utils.ElementUtils.XSLD_NAMESPACE;
 
 /**
  * Created by Илья on 07.06.2016.
@@ -33,7 +33,7 @@ public class XsldParser {
 
 
         Element root = getRoot(schema).orElseThrow(() -> new XsldException("No root found"));
-        lookupElement(root, new UnresolvedPath());
+        lookupElement(root, null);
         System.out.printf("");
     }
 
@@ -52,7 +52,9 @@ public class XsldParser {
      * @param parentPath UnresolvedPath to this node, not inclusive
      */
     private void lookupElement(Element element, UnresolvedPath parentPath) throws XsldException {
-        UnresolvedPath path = parentPath.append(element.getAttribute("name"));
+
+        UnresolvedPath path = parentPath == null ? new UnresolvedPath(element.getAttribute("name"))
+                : parentPath.append(element.getAttribute("name"));
         inspect(element, parentPath);
         Optional<Element> type;
         if (element.hasAttribute("type")) {
@@ -95,7 +97,8 @@ public class XsldParser {
      * @param parentPath UnresolvedPath to this node, not inclusive
      */
     private void inspect(Element element, UnresolvedPath parentPath) throws XsldException {
-        UnresolvedPath path = parentPath.append(element.getAttribute("name"));
+        UnresolvedPath path = parentPath == null ? new UnresolvedPath(element.getAttribute("name"))
+                : parentPath.append(element.getAttribute("name"));
         Attr labelNode = element.getAttributeNodeNS(XSLD_NAMESPACE, "label");
         if (labelNode != null) {
             addLabel(path, labelNode.getValue());

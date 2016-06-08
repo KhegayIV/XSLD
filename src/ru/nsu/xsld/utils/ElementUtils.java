@@ -1,4 +1,4 @@
-package ru.nsu.xsld.utills;
+package ru.nsu.xsld.utils;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

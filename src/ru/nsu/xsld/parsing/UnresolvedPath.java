@@ -1,5 +1,7 @@
 package ru.nsu.xsld.parsing;
 
+import ru.nsu.xsld.utils.ImmutableLinkedList;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -9,57 +11,58 @@ import java.util.stream.Collectors;
 /**
  * Created by Илья on 07.06.2016.
  */
-public class UnresolvedPath implements Iterable<String>{
-    private List<String> parts;
+public class UnresolvedPath extends ImmutableLinkedList<String, UnresolvedPath>{
 
-    public UnresolvedPath(List<String> parts) {
-        this.parts = parts;
+
+    protected UnresolvedPath(UnresolvedPath parent, String last) {
+        super(parent, last);
     }
 
-    public UnresolvedPath(String... parts){
-        this(Arrays.asList(parts));
+    protected UnresolvedPath(String last) {
+        super(last);
     }
 
-    public UnresolvedPath append(String part){
-        List<String> list = new ArrayList<>();
-        list.addAll(parts);
-        list.add(part);
-        return new UnresolvedPath(list);
+    public static UnresolvedPath of(List<String> parts) {
+        UnresolvedPath result = new UnresolvedPath(parts.get(0));
+        for (int i = 1; i < parts.size(); i++) {
+            result = result.append(parts.get(i));
+        }
+        return result;
     }
 
-    @Override
-    public String toString() {
-        return parts.stream().collect(Collectors.joining("/"));
-    }
-
-    @Override
-    public Iterator<String> iterator() {
-        return parts.iterator();
+    public static UnresolvedPath of(String... parts){
+        return of(Arrays.asList(parts));
     }
 
     public List<String> common(UnresolvedPath other){
+        Iterator<String> thisIterator = iterator();
+        Iterator<String> otherIterator = other.iterator();
         List<String> result = new ArrayList<>();
-        for (int i = 0; i < parts.size(); i++) {
-            if (parts.get(i).equals(other.parts.get(i))){
-                result.add(parts.get(i));
+        while (thisIterator.hasNext() && otherIterator.hasNext()){
+            String value = thisIterator.next();
+            if (value.equals(otherIterator.next())){
+                result.add(value);
             } else {
                 break;
             }
         }
+
         return result;
     }
 
     public int distance(UnresolvedPath other){
         List<String> common = this.common(other);
-        return parts.size() + other.parts.size() - 2*common.size(); //Distance between nodes
+        return length() + other.length() - 2*common.size(); //Distance between nodes
 
     }
 
-    public String get(int index){
-        return parts.get(index);
+    @Override
+    protected UnresolvedPath produce(String last) {
+        return null;
     }
 
-    public int length() {
-        return parts.size();
+    @Override
+    public UnresolvedPath append(String last) {
+        return null;
     }
 }

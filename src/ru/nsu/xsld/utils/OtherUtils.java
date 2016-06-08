@@ -1,4 +1,4 @@
-package ru.nsu.xsld.utills;
+package ru.nsu.xsld.utils;
 
 import ru.nsu.xsld.parsing.Path;
 import ru.nsu.xsld.parsing.UnresolvedPath;
@@ -34,6 +34,6 @@ public abstract class OtherUtils {
                 result.add(new Path.Part(name));
             }
         }
-        return new Path(result);
+        return Path.of(result);
     }
 }

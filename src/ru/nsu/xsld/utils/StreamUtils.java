@@ -1,6 +1,5 @@
-package ru.nsu.xsld.utills;
+package ru.nsu.xsld.utils;
 
-import java.util.Iterator;
 import java.util.function.BiFunction;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;

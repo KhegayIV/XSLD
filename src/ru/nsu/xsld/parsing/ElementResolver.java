@@ -2,8 +2,8 @@ package ru.nsu.xsld.parsing;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import ru.nsu.xsld.utills.ElementUtils;
-import ru.nsu.xsld.utills.OtherUtils;
+import ru.nsu.xsld.utils.ElementUtils;
+import ru.nsu.xsld.utils.OtherUtils;
 
 import java.util.Comparator;
 import java.util.Optional;

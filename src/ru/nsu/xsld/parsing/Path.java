@@ -1,60 +1,51 @@
 package ru.nsu.xsld.parsing;
 
+import ru.nsu.xsld.utils.ImmutableLinkedList;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * Created by Илья on 06.06.2016.
  */
-public class Path implements Iterable<Path.Part>{
-    protected List<Part> parts;
+public class Path extends ImmutableLinkedList<Path.Part, Path>{
 
-    public Path(List<Part> parts) {
-        this.parts = parts;
+
+    public Path(Path parent, Part last) {
+        super(parent, last);
     }
 
-    public Path(Part... parts) {
-        this(Arrays.asList(parts));
+    public Path(Part last) {
+        super(last);
     }
 
-    public Path append(Part part) {
-        List<Part> list = new ArrayList<>();
-        list.addAll(parts);
-        list.add(part);
-        return new Path(list);
-    }
-
-    public Path append(String element, int order) {
-        return append(new Part(element, order));
-    }
-
-    public Path append(String element) {
-        return append(element, 1);
-    }
-
-    public UnresolvedPath unresolve(){
-        List<String> stringParts = parts.stream().map(it -> it.name).collect(Collectors.toList()); // Because of IDEA bug
-        return new UnresolvedPath(stringParts);
+    public static Path of(Part... parts){
+        return of(Arrays.asList(parts));
     }
 
     @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        Iterator<Part> iterator = parts.iterator();
-        while (iterator.hasNext()) {
-            Part part = iterator.next();
-            part.addToBuilder(builder);
-            if (iterator.hasNext()) {
-                builder.append('/');
-            }
+    protected Path produce(Part last) {
+        return new Path(last);
+    }
+
+    @Override
+    public Path append(Part last) {
+        return new Path(this, last);
+    }
+
+    public static Path of(List<Part> parts){
+        Path result = new Path(parts.get(0));
+        for (int i = 1; i < parts.size(); i++) {
+            result = result.append(parts.get(i));
         }
-        return builder.toString();
+        return result;
     }
 
-    @Override
-    public Iterator<Part> iterator() {
-       return parts.iterator();
+    public UnresolvedPath unresolve() {
+        List<String> result = toList().stream().map(it -> it.name).collect(Collectors.toList());
+        return UnresolvedPath.of(result);
     }
+
 
     public static class Part {
         public final String name;
@@ -74,11 +65,4 @@ public class Path implements Iterable<Path.Part>{
         }
     }
 
-    public Part get(int index){
-        return parts.get(index);
-    }
-
-    public int length(){
-        return parts.size();
-    }
 }
