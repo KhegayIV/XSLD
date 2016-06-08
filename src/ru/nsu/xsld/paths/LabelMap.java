@@ -1,15 +1,25 @@
 package ru.nsu.xsld.paths;
 
-import java.util.Collection;
+import ru.nsu.xsld.utills.OtherUtils;
+
+import java.util.*;
 
 /**
  * Created by Илья on 06.06.2016.
  */
 public class LabelMap {
-    public String getLabelByPath(Path path){
-        throw new RuntimeException("Not implemented"); //TODO
+    private Map<String, Set<UnresolvedPath>> labelPaths;
+    private Map<UnresolvedPath, String> pathLabels;
+
+    public LabelMap(Map<UnresolvedPath, String> pathLabels) {
+        this.pathLabels = pathLabels;
+        this.labelPaths = OtherUtils.reverseMap(pathLabels);
+    }
+
+    public Optional<String> getLabelByPath(UnresolvedPath path){
+        return Optional.ofNullable(pathLabels.get(path));
     }
     public Collection<UnresolvedPath> getPathByLabel(String label){
-        throw new RuntimeException("Not implemented"); // TODO
+        return Optional.ofNullable(labelPaths.get(label)).orElse(Collections.emptySet());
     }
 }

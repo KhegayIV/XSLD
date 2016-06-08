@@ -21,7 +21,6 @@ import static ru.nsu.xsld.utills.ElementUtils.XSLD_NAMESPACE;
  * Created by Илья on 07.06.2016.
  */
 public class XsldParser {
-    private Map<String, List<UnresolvedPath>> labelPaths = new HashMap<>();
     private Map<UnresolvedPath, String> pathLabels = new HashMap<>();
     private List<Rule> rules = new ArrayList<>();
 
@@ -37,6 +36,10 @@ public class XsldParser {
         if (root == null) throw new XsldException("No root found");
         lookupElement(root, new UnresolvedPath());
         System.out.printf("");
+    }
+
+    public LabelMap createMap(){
+        return new LabelMap(pathLabels);
     }
 
     private static Element getRoot(Element schema) {
@@ -128,8 +131,6 @@ public class XsldParser {
 
     private void addLabel(UnresolvedPath path, String label) {
         pathLabels.put(path, label);
-        labelPaths.putIfAbsent(label, new ArrayList<>());
-        labelPaths.get(label).add(path);
     }
 
 }
