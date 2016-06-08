@@ -16,28 +16,28 @@ public abstract class ImmutableLinkedList<T, Q extends ImmutableLinkedList<T, Q>
         this.length = parent.length() + 1;
     }
 
-    protected ImmutableLinkedList(T last){
+    protected ImmutableLinkedList(T last) {
         this.last = last;
         this.parent = null;
         this.length = 1;
     }
 
 
-    public T get(int index){
+    public T get(int index) {
         if (index >= length) throw new IndexOutOfBoundsException();
-        if (index == length-1) return last;
+        if (index == length - 1) return last;
         return parent.get(index);
     }
 
-    public int length(){
+    public int length() {
         return length;
     }
 
-    public T last(){
+    public T last() {
         return last;
     }
 
-    public Optional<Q> parent(){
+    public Optional<Q> parent() {
         return Optional.ofNullable(parent);
     }
 
@@ -45,21 +45,21 @@ public abstract class ImmutableLinkedList<T, Q extends ImmutableLinkedList<T, Q>
 
     public abstract Q append(T last);
 
-    public Q reverse(){
+    public Q reverse() {
         Q result = produce(last);
         Optional<Q> source = parent();
-        while (source.isPresent()){
+        while (source.isPresent()) {
             result = result.append(source.get().last());
             source = source.flatMap(ImmutableLinkedList::parent);
         }
         return result;
     }
 
-    public List<T> toList(){
-        ImmutableLinkedList<T,Q> path = this;
+    public List<T> toList() {
+        ImmutableLinkedList<T, Q> path = this;
         List<T> result = new ArrayList<>();
         result.add(last);
-        while (path.parent != null){
+        while (path.parent != null) {
             path = path.parent;
             result.add(path.last);
         }
@@ -68,17 +68,16 @@ public abstract class ImmutableLinkedList<T, Q extends ImmutableLinkedList<T, Q>
     }
 
 
-
     @Override
     public Iterator<T> iterator() {
         return new ImmListIterator<>(this);
     }
 
-    private static class ImmListIterator<T, Q extends ImmutableLinkedList<T,Q>> implements Iterator<T>{
-        private ImmutableLinkedList<T,Q> reversedList;
+    private static class ImmListIterator<T, Q extends ImmutableLinkedList<T, Q>> implements Iterator<T> {
+        private ImmutableLinkedList<T, Q> reversedList;
 
 
-        ImmListIterator(ImmutableLinkedList<T,Q> source){
+        ImmListIterator(ImmutableLinkedList<T, Q> source) {
             reversedList = source.reverse();
         }
 

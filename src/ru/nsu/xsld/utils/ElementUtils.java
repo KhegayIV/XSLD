@@ -16,7 +16,8 @@ public abstract class ElementUtils {
     public static final String XSD_NAMESPACE = "http://www.w3.org/2001/XMLSchema";
     public static final String XSLD_NAMESPACE = "xsld.nsu.ru";
 
-    private ElementUtils(){}
+    private ElementUtils() {
+    }
 
     public static NodeListIterator<Element> descendantsByName(Element element, String namespaceURI, String localName) {
         return new NodeListIterator<>(element.getElementsByTagNameNS(namespaceURI, localName));
@@ -26,26 +27,26 @@ public abstract class ElementUtils {
         return descendantsByName(element, namespaceURI, localName).stream().filter(it -> it.getParentNode() == element);
     }
 
-    public static Stream<Element> childrenStreamByPath(Element parent, String namespaceURI, String... elementNames){
+    public static Stream<Element> childrenStreamByPath(Element parent, String namespaceURI, String... elementNames) {
         return StreamUtils.foldLeft(Stream.of(elementNames), Stream.of(parent),
                 (stream, name) ->
                         stream.flatMap(it -> childrenStreamByName(it, namespaceURI, name)));
     }
 
-    public static Stream<Element> childrenOneOf(Element parent, String namespaceURI, String... alternatives){
+    public static Stream<Element> childrenOneOf(Element parent, String namespaceURI, String... alternatives) {
         return StreamUtils.foldLeft(
                 Stream.of(alternatives).map(name -> childrenStreamByPath(parent, namespaceURI, name)),
                 Stream.<Element>of(),
                 Stream::concat);
     }
 
-    public static Optional<Element> orderedChild(Element root, String namespaceURI, String name, int order){
+    public static Optional<Element> orderedChild(Element root, String namespaceURI, String name, int order) {
         return childrenStreamByName(root, namespaceURI, name).skip(order).findFirst();
     }
 
-    public static Optional<Element> getByPath(Element root, String namespaceURI, Path path){
+    public static Optional<Element> getByPath(Element root, String namespaceURI, Path path) {
         return StreamUtils.foldLeft(StreamUtils.fromIterable(path), Optional.of(root),
-                (parent, part) -> parent.flatMap(it -> orderedChild(it, namespaceURI, part.name, part.order )));
+                (parent, part) -> parent.flatMap(it -> orderedChild(it, namespaceURI, part.name, part.order)));
     }
 
     public static class NodeListIterator<T extends Node> implements Iterator<T>, Iterable<T> {

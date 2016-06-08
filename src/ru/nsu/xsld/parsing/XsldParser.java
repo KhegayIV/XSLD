@@ -2,13 +2,13 @@ package ru.nsu.xsld.parsing;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
-import ru.nsu.xsld.utils.ElementUtils;
 import ru.nsu.xsld.XsldException;
 import ru.nsu.xsld.rules.Rule;
 import ru.nsu.xsld.rules.xsldrules.AllowRule;
 import ru.nsu.xsld.rules.xsldrules.AssertRule;
 import ru.nsu.xsld.rules.xsldrules.RequireRule;
 import ru.nsu.xsld.rules.xsldrules.TypeAssertRule;
+import ru.nsu.xsld.utils.ElementUtils;
 import ru.nsu.xsld.utils.StreamUtils;
 
 import java.util.*;
@@ -40,13 +40,13 @@ public class XsldParser {
         System.out.printf("");
     }
 
-    public LabelMap createMap(){
-        return new LabelMap(pathLabels, targetNamespace);
-    }
-
     private static Optional<Element> getRoot(Element schema) {
         return ElementUtils.childrenStreamByName(schema, XSD_NAMESPACE, "element")
                 .findFirst();
+    }
+
+    public LabelMap createMap() {
+        return new LabelMap(pathLabels, targetNamespace);
     }
 
     /**
@@ -75,13 +75,13 @@ public class XsldParser {
                             .flatMap(it -> ElementUtils.childrenOneOf(it, "restriction", "extension"))
                             .flatMap(it -> ElementUtils.childrenStreamByName(it, XSD_NAMESPACE, "attribute"))
             );
-            for (Element attribute : (Iterable<Element>) attributes::iterator){
+            for (Element attribute : (Iterable<Element>) attributes::iterator) {
                 inspect(attribute, path);
             }
 
             //Collect elements everywhere
             Stream<Element> childElems = ElementUtils.childrenOneOf(type.get(), XSD_NAMESPACE,
-                    "choice", "all", "sequence").flatMap( it ->
+                    "choice", "all", "sequence").flatMap(it ->
                     ElementUtils.childrenStreamByName(it, XSD_NAMESPACE, "element"));
             for (Element child : (Iterable<Element>) childElems::iterator) {
                 lookupElement(child, path);
@@ -90,7 +90,7 @@ public class XsldParser {
             //Search for inheritance
             type = ElementUtils.childrenStreamByPath(type.get(), XSD_NAMESPACE, "complexContent", "extension")
                     .findAny()
-                    .map( it -> it.getAttribute("base")).map(typeElements::get);
+                    .map(it -> it.getAttribute("base")).map(typeElements::get);
         }
     }
 

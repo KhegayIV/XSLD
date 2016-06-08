@@ -7,10 +7,11 @@ class RuleNode {
 
     private Rule rule;
 
-    public void block(){
+    public void block() {
         throw new RuntimeException("Not implemented"); // TODO
     }
-    public void reset(){
+
+    public void reset() {
         throw new RuntimeException("Not implemented"); // TODO
     }
 

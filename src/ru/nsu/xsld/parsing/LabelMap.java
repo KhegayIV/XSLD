@@ -18,10 +18,11 @@ public class LabelMap {
         this.labelPaths = OtherUtils.reverseMap(pathLabels);
     }
 
-    public Optional<String> getLabelByPath(UnresolvedPath path){
+    public Optional<String> getLabelByPath(UnresolvedPath path) {
         return Optional.ofNullable(pathLabels.get(path));
     }
-    public Collection<UnresolvedPath> getPathByLabel(String label){
+
+    public Collection<UnresolvedPath> getPathByLabel(String label) {
         return Optional.ofNullable(labelPaths.get(label)).orElse(Collections.emptySet());
     }
 

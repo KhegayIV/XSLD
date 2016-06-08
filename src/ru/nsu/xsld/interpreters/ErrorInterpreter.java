@@ -12,7 +12,8 @@ public interface ErrorInterpreter {
 
     /**
      * Handles error and returns string representation
-     * @param name error name as defined in schema
+     *
+     * @param name      error name as defined in schema
      * @param arguments error argument names as defined in schema mapped to values from XML
      * @return string representing error message or null, if such error isn't interpreted by this interpreter
      */

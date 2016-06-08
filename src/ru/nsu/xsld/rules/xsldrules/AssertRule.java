@@ -1,7 +1,7 @@
 package ru.nsu.xsld.rules.xsldrules;
 
-import ru.nsu.xsld.parsing.ElementResolver;
 import ru.nsu.xsld.PredicateResolver;
+import ru.nsu.xsld.parsing.ElementResolver;
 import ru.nsu.xsld.parsing.UnresolvedPath;
 import ru.nsu.xsld.rules.Rule;
 

@@ -3,8 +3,8 @@ package ru.nsu.xsld;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 import ru.nsu.xsld.interpreters.ErrorInterpreter;
-import ru.nsu.xsld.interpreters.PredicateInterpreter;
 import ru.nsu.xsld.interpreters.ErrorListener;
+import ru.nsu.xsld.interpreters.PredicateInterpreter;
 import ru.nsu.xsld.parsing.XsldParser;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -24,15 +24,11 @@ import java.io.OutputStream;
  */
 public class XSLD {
 
-    //TODO remove
-    public static void main(String[] args) throws Exception {
-        new XSLD(new File("res/test.xml"));
-    }
-
     private RuleChecker ruleChecker;
 
     /**
      * Creates XSLD schema from file
+     *
      * @param file file containing XSLD definition
      * @throws XsldException if file provided is not XSLD
      * @throws IOException
@@ -41,9 +37,9 @@ public class XSLD {
         this(nodeFromFile(file));
     }
 
-
     /**
      * Creates XSLD schema from XML node root
+     *
      * @param element node used as root for XSLD schema
      * @throws XsldException if node provided is not XSLD
      */
@@ -52,8 +48,21 @@ public class XSLD {
 
     }
 
+    //TODO remove
+    public static void main(String[] args) throws Exception {
+        new XSLD(new File("res/test.xml"));
+    }
+
+    private static Element nodeFromFile(File file) throws IOException, SAXException, ParserConfigurationException {
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setNamespaceAware(true);
+        DocumentBuilder db = dbf.newDocumentBuilder();
+        return db.parse(file).getDocumentElement();
+    }
+
     /**
      * Extracts XSD schema from XSLD schema and writes to stream
+     *
      * @param outputStream stream used for writing resulting XSD
      */
     public void extractXsd(OutputStream outputStream) {
@@ -69,10 +78,11 @@ public class XSLD {
 
     /**
      * Verifies file against this XSLD schema
-     * @param file file to match with schema
+     *
+     * @param file     file to match with schema
      * @param listener error listener. Can be null
-     * @throws IOException
      * @return true if file matches schema
+     * @throws IOException
      */
     public boolean verify(File file, ErrorListener listener) throws IOException, SAXException, ParserConfigurationException {
         return verify(nodeFromFile(file), listener);
@@ -80,32 +90,26 @@ public class XSLD {
 
     /**
      * Verifies XML node against this XSLD schema
-     * @param element root for XML file to match with schema
+     *
+     * @param element  root for XML file to match with schema
      * @param listener error listener. Can be null
      * @return true if XML matches schema
      */
-    public boolean verify(Element element, ErrorListener listener){
+    public boolean verify(Element element, ErrorListener listener) {
         throw new RuntimeException("Not implemented"); //TODO
     }
 
     /**
      * Add error interpreter to schema
      */
-    public void addErrorInterpreter(ErrorInterpreter interpreter){
+    public void addErrorInterpreter(ErrorInterpreter interpreter) {
         ruleChecker.addErrorInterpreter(interpreter);
     }
 
     /**
      * Add predicate interpreter to schema
      */
-    public void addPredicateInterpreter(PredicateInterpreter interpreter){
+    public void addPredicateInterpreter(PredicateInterpreter interpreter) {
         ruleChecker.addPredicateInterpreter(interpreter);
-    }
-
-    private static Element nodeFromFile(File file) throws IOException, SAXException, ParserConfigurationException {
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        dbf.setNamespaceAware(true);
-        DocumentBuilder db = dbf.newDocumentBuilder();
-        return db.parse(file).getDocumentElement();
     }
 }

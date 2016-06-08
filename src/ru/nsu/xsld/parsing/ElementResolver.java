@@ -21,7 +21,7 @@ public class ElementResolver {
     }
 
     //TODO: Attributes
-    public Optional<String> getValue(String label, Path context){
+    public Optional<String> getValue(String label, Path context) {
         return labelMap.getPathByLabel(label).stream().sorted(new PathComparator(context))
                 .map(it -> OtherUtils.resolvePath(it, context))
                 .map(it -> ElementUtils.getByPath(root, labelMap.getTargetNamespace(), it))
@@ -31,7 +31,7 @@ public class ElementResolver {
                 .findFirst();
     }
 
-    private static class PathComparator implements Comparator<UnresolvedPath>{
+    private static class PathComparator implements Comparator<UnresolvedPath> {
         private UnresolvedPath context;
 
         PathComparator(Path context) {
@@ -45,13 +45,13 @@ public class ElementResolver {
             int commonFirst = context.common(first).size();
             int commonSecond = context.common(second).size();
             //if common size equals context size -
-            if (commonFirst != context.length() && commonSecond != context.length()){
+            if (commonFirst != context.length() && commonSecond != context.length()) {
                 return commonSecond - commonFirst; //Path with bigger common part is closer
             }
-            if (commonFirst != context.length()){
+            if (commonFirst != context.length()) {
                 return -1; //Parent is closer than child
             }
-            if (commonSecond != context.length()){
+            if (commonSecond != context.length()) {
                 return 1; //Parent is closer than child
             }
             return 0; // Children on same depth are equal
