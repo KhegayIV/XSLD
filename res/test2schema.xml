@@ -8,7 +8,7 @@
             <xs:sequence>
                 <xs:element name="elem1">
                     <xs:complexType>
-                        <xs:attribute name="attribute"/>
+                        <xs:attribute name="attribute" xl:label="attr"/>
                     </xs:complexType>
                 </xs:element>
                 <xs:element name="elem2" type="elem2type" minOccurs="0" maxOccurs="unbounded"/>
@@ -19,7 +19,7 @@
     <xs:complexType name="elem2type">
         <xs:all>
             <xs:element name="label" type="xs:string" xl:label="labeledElement"/>
-            <xs:element name="elem3" type="xs:string">
+            <xs:element name="elem3" type="xs:string" xl:label="referencer">
                 <xl:assert test="someCheck(labeledElement)" error="someError(labeledElement)"/>
                 <xl:assert test="false" error="sub('123123')"/>
             </xs:element>

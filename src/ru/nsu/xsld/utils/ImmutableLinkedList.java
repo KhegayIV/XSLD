@@ -67,6 +67,14 @@ public abstract class ImmutableLinkedList<T, Q extends ImmutableLinkedList<T, Q>
         return result;
     }
 
+    @Override
+    public String toString() {
+        StringJoiner joiner = new StringJoiner("/");
+        for (T t : this) {
+            joiner.add(t.toString());
+        }
+        return joiner.toString();
+    }
 
     @Override
     public Iterator<T> iterator() {

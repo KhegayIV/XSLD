@@ -50,7 +50,7 @@ public class XSLD {
 
     //TODO remove
     public static void main(String[] args) throws Exception {
-        new XSLD(new File("res/test.xml"));
+        new XSLD(new File("res/test2schema.xml"));
     }
 
     private static Element nodeFromFile(File file) throws IOException, SAXException, ParserConfigurationException {

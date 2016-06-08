@@ -20,14 +20,12 @@ public class ElementResolver {
         this.labelMap = labelMap;
     }
 
-    //TODO: Attributes
     public Optional<String> getValue(String label, Path context) {
         return labelMap.getPathByLabel(label).stream().sorted(new PathComparator(context))
                 .map(it -> OtherUtils.resolvePath(it, context))
-                .map(it -> ElementUtils.getByPath(root, labelMap.getTargetNamespace(), it))
+                .map(it -> ElementUtils.getValueByPath(root, labelMap.getTargetNamespace(), it))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .map(Node::getTextContent)
                 .findFirst();
     }
 

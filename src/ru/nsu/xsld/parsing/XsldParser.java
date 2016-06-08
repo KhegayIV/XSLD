@@ -58,7 +58,7 @@ public class XsldParser {
 
         UnresolvedPath path = parentPath == null ? new UnresolvedPath(element.getAttribute("name"))
                 : parentPath.append(element.getAttribute("name"));
-        inspect(element, parentPath);
+        inspect(element, parentPath, false);
         Optional<Element> type;
         if (element.hasAttribute("type")) {
             type = Optional.ofNullable(typeElements.get(element.getAttribute("type")));
@@ -76,7 +76,7 @@ public class XsldParser {
                             .flatMap(it -> ElementUtils.childrenStreamByName(it, XSD_NAMESPACE, "attribute"))
             );
             for (Element attribute : (Iterable<Element>) attributes::iterator) {
-                inspect(attribute, path);
+                inspect(attribute, path, true);
             }
 
             //Collect elements everywhere
@@ -99,9 +99,9 @@ public class XsldParser {
      *
      * @param parentPath UnresolvedPath to this node, not inclusive
      */
-    private void inspect(Element element, UnresolvedPath parentPath) throws XsldException {
-        UnresolvedPath path = parentPath == null ? new UnresolvedPath(element.getAttribute("name"))
-                : parentPath.append(element.getAttribute("name"));
+    private void inspect(Element element, UnresolvedPath parentPath, boolean isAttr) throws XsldException {
+        String name = isAttr ? ElementUtils.ATTR_PREFIX + element.getAttribute("name") : element.getAttribute("name");
+        UnresolvedPath path = parentPath == null ? new UnresolvedPath(name) : parentPath.append(name);
         Attr labelNode = element.getAttributeNodeNS(XSLD_NAMESPACE, "label");
         if (labelNode != null) {
             addLabel(path, labelNode.getValue());

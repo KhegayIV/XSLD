@@ -15,6 +15,7 @@ import java.util.stream.Stream;
 public abstract class ElementUtils {
     public static final String XSD_NAMESPACE = "http://www.w3.org/2001/XMLSchema";
     public static final String XSLD_NAMESPACE = "xsld.nsu.ru";
+    public static final String ATTR_PREFIX = "@";
 
     private ElementUtils() {
     }
@@ -44,9 +45,19 @@ public abstract class ElementUtils {
         return childrenStreamByName(root, namespaceURI, name).skip(order).findFirst();
     }
 
-    public static Optional<Element> getByPath(Element root, String namespaceURI, Path path) {
+    public static Optional<Element> getElementByPath(Element root, String namespaceURI, Path path) {
         return StreamUtils.foldLeft(StreamUtils.fromIterable(path), Optional.of(root),
                 (parent, part) -> parent.flatMap(it -> orderedChild(it, namespaceURI, part.name, part.order)));
+    }
+
+    public static Optional<String> getValueByPath(Element root, String namespaceURI, Path path){
+        Path.Part last = path.last();
+        if (!last.name.startsWith(ATTR_PREFIX)){
+            return getElementByPath(root, namespaceURI, path).map(Node::getTextContent);
+        } else {
+            return Optional.ofNullable(path.parent().flatMap(it -> getElementByPath(root, namespaceURI, it))
+                    .orElse(root).getAttribute(last.name.substring(1)));
+        }
     }
 
     public static class NodeListIterator<T extends Node> implements Iterator<T>, Iterable<T> {
