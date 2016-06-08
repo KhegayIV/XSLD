@@ -1,6 +1,7 @@
 package ru.nsu.xsld.utils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by Илья on 08.06.2016.
@@ -10,22 +11,22 @@ public abstract class ImmutableLinkedList<T, Q extends ImmutableLinkedList<T, Q>
     private final Q parent;
     private final int length;
 
+    protected ImmutableLinkedList(){
+        last = null;
+        parent = null;
+        length = 0;
+    }
+
     protected ImmutableLinkedList(Q parent, T last) {
         this.last = last;
         this.parent = parent;
         this.length = parent.length() + 1;
     }
 
-    protected ImmutableLinkedList(T last) {
-        this.last = last;
-        this.parent = null;
-        this.length = 1;
-    }
-
 
     public T get(int index) {
         if (index >= length) throw new IndexOutOfBoundsException();
-        if (index == length - 1) return last;
+        if (index == length - 1) return last();
         return parent.get(index);
     }
 
@@ -33,38 +34,37 @@ public abstract class ImmutableLinkedList<T, Q extends ImmutableLinkedList<T, Q>
         return length;
     }
 
+    public boolean isEmpty(){
+        return length == 0;
+    }
+
     public T last() {
+        if (last == null) throw new IndexOutOfBoundsException("Get on empty list");
         return last;
     }
 
-    public Optional<Q> parent() {
-        return Optional.ofNullable(parent);
+    public Q parent() {
+        if (parent == null) return empty();
+        return parent;
     }
 
-    protected abstract Q produce(T last);
+    protected abstract Q empty();
 
     public abstract Q append(T last);
 
     public Q reverse() {
-        Q result = produce(last);
-        Optional<Q> source = parent();
-        while (source.isPresent()) {
-            result = result.append(source.get().last());
-            source = source.flatMap(ImmutableLinkedList::parent);
+        if (this.isEmpty()) return empty();
+        Q result = empty().append(last());
+        Q source = parent();
+        while (!source.isEmpty()){
+            result = result.append(source.last());
+            source = source.parent();
         }
         return result;
     }
 
     public List<T> toList() {
-        ImmutableLinkedList<T, Q> path = this;
-        List<T> result = new ArrayList<>();
-        result.add(last);
-        while (path.parent != null) {
-            path = path.parent;
-            result.add(path.last);
-        }
-        Collections.reverse(result);
-        return result;
+        return StreamUtils.fromIterable(this).collect(Collectors.toList());
     }
 
     @Override
@@ -91,7 +91,7 @@ public abstract class ImmutableLinkedList<T, Q extends ImmutableLinkedList<T, Q>
 
         @Override
         public boolean hasNext() {
-            return reversedList != null;
+            return !reversedList.isEmpty();
         }
 
         @Override

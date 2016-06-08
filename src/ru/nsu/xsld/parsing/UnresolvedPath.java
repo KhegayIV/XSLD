@@ -1,6 +1,7 @@
 package ru.nsu.xsld.parsing;
 
 import ru.nsu.xsld.utils.ImmutableLinkedList;
+import ru.nsu.xsld.utils.StreamUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,22 +12,17 @@ import java.util.List;
  * Created by Илья on 07.06.2016.
  */
 public class UnresolvedPath extends ImmutableLinkedList<String, UnresolvedPath> {
+    private static final UnresolvedPath empty = new UnresolvedPath();
 
+    public UnresolvedPath() { }
 
     protected UnresolvedPath(UnresolvedPath parent, String last) {
         super(parent, last);
     }
 
-    protected UnresolvedPath(String last) {
-        super(last);
-    }
 
     public static UnresolvedPath of(List<String> parts) {
-        UnresolvedPath result = new UnresolvedPath(parts.get(0));
-        for (int i = 1; i < parts.size(); i++) {
-            result = result.append(parts.get(i));
-        }
-        return result;
+        return StreamUtils.foldLeft(parts.stream(), new UnresolvedPath(), UnresolvedPath::append);
     }
 
     public static UnresolvedPath of(String... parts) {
@@ -56,8 +52,8 @@ public class UnresolvedPath extends ImmutableLinkedList<String, UnresolvedPath> 
     }
 
     @Override
-    protected UnresolvedPath produce(String last) {
-        return new UnresolvedPath(last);
+    protected UnresolvedPath empty() {
+        return empty;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package ru.nsu.xsld.parsing;
 
 import ru.nsu.xsld.utils.ImmutableLinkedList;
+import ru.nsu.xsld.utils.StreamUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,14 +11,14 @@ import java.util.stream.Collectors;
  * Created by Илья on 06.06.2016.
  */
 public class Path extends ImmutableLinkedList<Path.Part, Path> {
+    private static final Path empty = new Path();
 
 
-    public Path(Path parent, Part last) {
-        super(parent, last);
+    public Path() {
     }
 
-    public Path(Part last) {
-        super(last);
+    protected Path(Path parent, Part last) {
+        super(parent, last);
     }
 
     public static Path of(Part... parts) {
@@ -25,21 +26,21 @@ public class Path extends ImmutableLinkedList<Path.Part, Path> {
     }
 
     public static Path of(List<Part> parts) {
-        Path result = new Path(parts.get(0));
-        for (int i = 1; i < parts.size(); i++) {
-            result = result.append(parts.get(i));
-        }
-        return result;
+        return StreamUtils.foldLeft(parts.stream(), new Path(), Path::append);
     }
 
     @Override
-    protected Path produce(Part last) {
-        return new Path(last);
+    protected Path empty() {
+        return empty;
     }
 
     @Override
     public Path append(Part last) {
         return new Path(this, last);
+    }
+
+    public Path append(String name, int order) {
+        return append(new Part(name, order));
     }
 
     public UnresolvedPath unresolve() {
@@ -61,8 +62,9 @@ public class Path extends ImmutableLinkedList<Path.Part, Path> {
             this(name, 0);
         }
 
-        void addToBuilder(StringBuilder builder) {
-            builder.append(name).append('[').append(order).append(']');
+        @Override
+        public String toString() {
+            return name+"["+order+"]";
         }
     }
 

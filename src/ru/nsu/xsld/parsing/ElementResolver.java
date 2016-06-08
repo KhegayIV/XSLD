@@ -15,7 +15,7 @@ public class ElementResolver {
     private final Element root;
     private final LabelMap labelMap;
 
-    ElementResolver(Element root, LabelMap labelMap) {
+    public ElementResolver(Element root, LabelMap labelMap) {
         this.root = root;
         this.labelMap = labelMap;
     }

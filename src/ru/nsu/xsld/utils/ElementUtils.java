@@ -55,7 +55,7 @@ public abstract class ElementUtils {
         if (!last.name.startsWith(ATTR_PREFIX)){
             return getElementByPath(root, namespaceURI, path).map(Node::getTextContent);
         } else {
-            return Optional.ofNullable(path.parent().flatMap(it -> getElementByPath(root, namespaceURI, it))
+            return Optional.ofNullable(getElementByPath(root, namespaceURI, path.parent())
                     .orElse(root).getAttribute(last.name.substring(1)));
         }
     }

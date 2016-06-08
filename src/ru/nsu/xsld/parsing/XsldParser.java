@@ -36,8 +36,7 @@ public class XsldParser {
 
 
         Element root = getRoot(schema).orElseThrow(() -> new XsldException("No root found"));
-        lookupElement(root, null);
-        System.out.printf("");
+        lookupElement(root, new UnresolvedPath());
     }
 
     private static Optional<Element> getRoot(Element schema) {
@@ -56,8 +55,7 @@ public class XsldParser {
      */
     private void lookupElement(Element element, UnresolvedPath parentPath) throws XsldException {
 
-        UnresolvedPath path = parentPath == null ? new UnresolvedPath(element.getAttribute("name"))
-                : parentPath.append(element.getAttribute("name"));
+        UnresolvedPath path = parentPath.append(element.getAttribute("name"));
         inspect(element, parentPath, false);
         Optional<Element> type;
         if (element.hasAttribute("type")) {
@@ -101,7 +99,7 @@ public class XsldParser {
      */
     private void inspect(Element element, UnresolvedPath parentPath, boolean isAttr) throws XsldException {
         String name = isAttr ? ElementUtils.ATTR_PREFIX + element.getAttribute("name") : element.getAttribute("name");
-        UnresolvedPath path = parentPath == null ? new UnresolvedPath(name) : parentPath.append(name);
+        UnresolvedPath path = parentPath.append(name);
         Attr labelNode = element.getAttributeNodeNS(XSLD_NAMESPACE, "label");
         if (labelNode != null) {
             addLabel(path, labelNode.getValue());

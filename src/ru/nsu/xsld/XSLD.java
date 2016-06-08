@@ -5,6 +5,9 @@ import org.xml.sax.SAXException;
 import ru.nsu.xsld.interpreters.ErrorInterpreter;
 import ru.nsu.xsld.interpreters.ErrorListener;
 import ru.nsu.xsld.interpreters.PredicateInterpreter;
+import ru.nsu.xsld.parsing.ElementResolver;
+import ru.nsu.xsld.parsing.LabelMap;
+import ru.nsu.xsld.parsing.Path;
 import ru.nsu.xsld.parsing.XsldParser;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -24,6 +27,7 @@ import java.io.OutputStream;
  */
 public class XSLD {
 
+    private LabelMap labelMap;
     private RuleChecker ruleChecker;
 
     /**
@@ -45,12 +49,14 @@ public class XSLD {
      */
     public XSLD(Element element) throws XsldException {
         XsldParser parser = new XsldParser(element);
+        labelMap = parser.createMap();
 
     }
 
     //TODO remove
     public static void main(String[] args) throws Exception {
-        new XSLD(new File("res/test2schema.xml"));
+        new XSLD(new File("res/test2schema.xml"))
+                .verify(new File("res/test2document.xml"), null);
     }
 
     private static Element nodeFromFile(File file) throws IOException, SAXException, ParserConfigurationException {
@@ -76,6 +82,24 @@ public class XSLD {
 
     }
 
+
+    /**
+     * Verifies XML node against this XSLD schema
+     *
+     * @param element  root for XML file to match with schema
+     * @param listener error listener. Can be null
+     * @return true if XML matches schema
+     */
+    public boolean verify(Element element, ErrorListener listener) {
+        ElementResolver resolver = new ElementResolver(element, labelMap);
+
+        Path path = new Path().append("elem2",2).append("elem3",1);
+        System.out.println(resolver.getValue("attr", path).orElse(null));
+        System.out.println(resolver.getValue("labeledElement", path).orElse(null));
+
+        throw new RuntimeException("Not implemented"); // TODO
+    }
+
     /**
      * Verifies file against this XSLD schema
      *
@@ -88,16 +112,6 @@ public class XSLD {
         return verify(nodeFromFile(file), listener);
     }
 
-    /**
-     * Verifies XML node against this XSLD schema
-     *
-     * @param element  root for XML file to match with schema
-     * @param listener error listener. Can be null
-     * @return true if XML matches schema
-     */
-    public boolean verify(Element element, ErrorListener listener) {
-        throw new RuntimeException("Not implemented"); //TODO
-    }
 
     /**
      * Add error interpreter to schema
