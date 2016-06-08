@@ -1,0 +1,29 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xl="xsld.nsu.ru">
+    <xl:check signature="someCheck(argument)"/>
+    <xl:error signature="someError(argument)"/>
+    <xl:substitution name="sub" locale="RU" value="Проверка {0}"/>
+
+    <xs:element name="root">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="elem1">
+                    <xs:complexType>
+                        <xs:attribute name="attribute"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="elem2" type="elem2type" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="elem2type">
+        <xs:all>
+            <xs:element name="label" type="xs:string" xl:label="labeledElement"/>
+            <xs:element name="elem3" type="xs:string">
+                <xl:assert test="someCheck(labeledElement)" error="someError(labeledElement)"/>
+                <xl:assert test="false" error="sub('123123')"/>
+            </xs:element>
+        </xs:all>
+    </xs:complexType>
+</xs:schema>
+

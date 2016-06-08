@@ -1,0 +1,15 @@
+<root>
+    <elem1 attribute="attr"/>
+    <elem2>
+        <label>1</label>
+        <elem3>111</elem3>
+    </elem2>
+    <elem2>
+        <label>2</label>
+        <elem3>222</elem3>
+    </elem2>
+    <elem2>
+        <label>3</label>
+        <elem3>333</elem3>
+    </elem2>
+</root>
