@@ -1,16 +1,15 @@
-package ru.nsu.xsld.paths;
+package ru.nsu.xsld.parsing;
 
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
  * Created by Илья on 06.06.2016.
  */
-public class Path{
+public class Path implements Iterable<Path.Part>{
     protected List<Part> parts;
 
-    private Path(List<Part> parts) {
+    public Path(List<Part> parts) {
         this.parts = parts;
     }
 
@@ -33,6 +32,11 @@ public class Path{
         return append(element, 1);
     }
 
+    public UnresolvedPath unresolve(){
+        List<String> stringParts = parts.stream().map(it -> it.name).collect(Collectors.toList()); // Because of IDEA bug
+        return new UnresolvedPath(stringParts);
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -47,21 +51,34 @@ public class Path{
         return builder.toString();
     }
 
-    public static class Part {
-        private final String element;
-        private final int order;
+    @Override
+    public Iterator<Part> iterator() {
+       return parts.iterator();
+    }
 
-        public Part(String element, int order) {
-            this.element = element;
+    public static class Part {
+        public final String name;
+        public final int order;
+
+        public Part(String name, int order) {
+            this.name = name;
             this.order = order;
         }
 
-        public Part(String element) {
-            this(element, 1);
+        public Part(String name) {
+            this(name, 0);
         }
 
         void addToBuilder(StringBuilder builder) {
-            builder.append(element).append('[').append(order).append(']');
+            builder.append(name).append('[').append(order).append(']');
         }
+    }
+
+    public Part get(int index){
+        return parts.get(index);
+    }
+
+    public int length(){
+        return parts.size();
     }
 }

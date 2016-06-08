@@ -1,13 +1,11 @@
 package ru.nsu.xsld;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 import ru.nsu.xsld.interpreters.ErrorInterpreter;
 import ru.nsu.xsld.interpreters.PredicateInterpreter;
 import ru.nsu.xsld.interpreters.ErrorListener;
-import ru.nsu.xsld.paths.XsldParser;
+import ru.nsu.xsld.parsing.XsldParser;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;

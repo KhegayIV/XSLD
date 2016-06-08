@@ -1,7 +1,9 @@
 package ru.nsu.xsld.utills;
 
+import java.util.Iterator;
 import java.util.function.BiFunction;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * Created by Илья on 08.06.2016.
@@ -21,5 +23,9 @@ public abstract class StreamUtils {
             result = accumulator.apply(result, object);
         }
         return result;
+    }
+
+    public static <T> Stream<T> fromIterable(Iterable<T> source){
+        return StreamSupport.stream(source.spliterator(), false);
     }
 }

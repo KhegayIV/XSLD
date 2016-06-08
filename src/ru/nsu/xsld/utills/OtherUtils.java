@@ -1,9 +1,9 @@
 package ru.nsu.xsld.utills;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import ru.nsu.xsld.parsing.Path;
+import ru.nsu.xsld.parsing.UnresolvedPath;
+
+import java.util.*;
 
 /**
  * Created by Илья on 08.06.2016.
@@ -22,5 +22,18 @@ public abstract class OtherUtils {
             result.get(value).add(key);
         }
         return result;
+    }
+
+    public static Path resolvePath(UnresolvedPath source, Path context){
+        List<Path.Part> result = new ArrayList<>();
+        for (int i = 0; i < source.length(); i++) {
+            String name = source.get(i);
+            if (i < context.length() && context.get(i).name.equals(name)){
+                result.add(context.get(i));
+            } else {
+                result.add(new Path.Part(name));
+            }
+        }
+        return new Path(result);
     }
 }

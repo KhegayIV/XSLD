@@ -1,4 +1,4 @@
-package ru.nsu.xsld.paths;
+package ru.nsu.xsld.parsing;
 
 import ru.nsu.xsld.utills.OtherUtils;
 
@@ -11,7 +11,7 @@ public class LabelMap {
     private Map<String, Set<UnresolvedPath>> labelPaths;
     private Map<UnresolvedPath, String> pathLabels;
 
-    public LabelMap(Map<UnresolvedPath, String> pathLabels) {
+    LabelMap(Map<UnresolvedPath, String> pathLabels) {
         this.pathLabels = pathLabels;
         this.labelPaths = OtherUtils.reverseMap(pathLabels);
     }

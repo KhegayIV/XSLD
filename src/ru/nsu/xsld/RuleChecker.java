@@ -3,6 +3,7 @@ package ru.nsu.xsld;
 import ru.nsu.xsld.interpreters.ErrorInterpreter;
 import ru.nsu.xsld.interpreters.PredicateInterpreter;
 import ru.nsu.xsld.interpreters.ErrorListener;
+import ru.nsu.xsld.parsing.ElementResolver;
 import ru.nsu.xsld.rules.RuleSet;
 
 import java.util.ArrayList;

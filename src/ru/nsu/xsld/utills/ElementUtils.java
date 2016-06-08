@@ -3,10 +3,11 @@ package ru.nsu.xsld.utills;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import ru.nsu.xsld.parsing.Path;
 
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 /**
  * Created by Илья on 08.06.2016.
@@ -38,6 +39,15 @@ public abstract class ElementUtils {
                 Stream::concat);
     }
 
+    public static Optional<Element> orderedChild(Element root, String namespaceURI, String name, int order){
+        return childrenStreamByName(root, namespaceURI, name).skip(order).findFirst();
+    }
+
+    public static Optional<Element> getByPath(Element root, String namespaceURI, Path path){
+        return StreamUtils.foldLeft(StreamUtils.fromIterable(path), Optional.of(root),
+                (parent, part) -> parent.flatMap(it -> orderedChild(it, namespaceURI, part.name, part.order )));
+    }
+
     public static class NodeListIterator<T extends Node> implements Iterator<T>, Iterable<T> {
         private NodeList list;
         private int position = 0;
@@ -64,7 +74,7 @@ public abstract class ElementUtils {
         }
 
         public Stream<T> stream() {
-            return StreamSupport.stream(this.spliterator(), false);
+            return StreamUtils.fromIterable(this);
         }
     }
 }
