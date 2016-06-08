@@ -13,12 +13,10 @@ import java.util.Optional;
  */
 public class ElementResolver {
     private final Element root;
-    private final String targetNamespace;
     private final LabelMap labelMap;
 
-    ElementResolver(Element root, String targetNamespace, LabelMap labelMap) {
+    ElementResolver(Element root, LabelMap labelMap) {
         this.root = root;
-        this.targetNamespace = targetNamespace;
         this.labelMap = labelMap;
     }
 
@@ -26,7 +24,7 @@ public class ElementResolver {
     public Optional<String> getValue(String label, Path context){
         return labelMap.getPathByLabel(label).stream().sorted(new PathComparator(context))
                 .map(it -> OtherUtils.resolvePath(it, context))
-                .map(it -> ElementUtils.getByPath(root, targetNamespace, it))
+                .map(it -> ElementUtils.getByPath(root, labelMap.getTargetNamespace(), it))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .map(Node::getTextContent)

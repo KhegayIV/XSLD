@@ -10,9 +10,11 @@ import java.util.*;
 public class LabelMap {
     private Map<String, Set<UnresolvedPath>> labelPaths;
     private Map<UnresolvedPath, String> pathLabels;
+    private String targetNamespace;
 
-    LabelMap(Map<UnresolvedPath, String> pathLabels) {
+    LabelMap(Map<UnresolvedPath, String> pathLabels, String targetNamespace) {
         this.pathLabels = pathLabels;
+        this.targetNamespace = targetNamespace;
         this.labelPaths = OtherUtils.reverseMap(pathLabels);
     }
 
@@ -21,5 +23,9 @@ public class LabelMap {
     }
     public Collection<UnresolvedPath> getPathByLabel(String label){
         return Optional.ofNullable(labelPaths.get(label)).orElse(Collections.emptySet());
+    }
+
+    public String getTargetNamespace() {
+        return targetNamespace;
     }
 }
