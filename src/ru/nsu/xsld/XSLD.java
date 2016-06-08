@@ -93,10 +93,10 @@ public class XSLD {
     public boolean verify(Element element, ErrorListener listener) {
         ElementResolver resolver = new ElementResolver(element, labelMap);
 
-        Path path = new Path().append("elem2",2).append("elem3",1);
+        Path path = new Path().append("root",0).append("elem2",0).append("elem3",0);
         System.out.println(resolver.getValue("attr", path).orElse(null));
         System.out.println(resolver.getValue("labeledElement", path).orElse(null));
-
+        System.out.println(123);
         throw new RuntimeException("Not implemented"); // TODO
     }
 

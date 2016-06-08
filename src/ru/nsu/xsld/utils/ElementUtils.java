@@ -46,7 +46,7 @@ public abstract class ElementUtils {
     }
 
     public static Optional<Element> getElementByPath(Element root, String namespaceURI, Path path) {
-        return StreamUtils.foldLeft(StreamUtils.fromIterable(path), Optional.of(root),
+        return StreamUtils.foldLeft(StreamUtils.fromIterable(path).skip(1), Optional.of(root),
                 (parent, part) -> parent.flatMap(it -> orderedChild(it, namespaceURI, part.name, part.order)));
     }
 
