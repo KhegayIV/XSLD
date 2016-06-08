@@ -1,7 +1,5 @@
 package ru.nsu.xsld;
 
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -41,7 +39,7 @@ public class XSLD {
      * @throws XsldException if file provided is not XSLD
      * @throws IOException
      */
-    public XSLD(@NotNull File file) throws XsldException, IOException, SAXException, ParserConfigurationException {
+    public XSLD(File file) throws XsldException, IOException, SAXException, ParserConfigurationException {
         this(nodeFromFile(file));
     }
 
@@ -51,7 +49,7 @@ public class XSLD {
      * @param element node used as root for XSLD schema
      * @throws XsldException if node provided is not XSLD
      */
-    public XSLD(@NotNull Element element) throws XsldException {
+    public XSLD(Element element) throws XsldException {
         XsldParser parser = new XsldParser(element);
 
     }
@@ -60,7 +58,7 @@ public class XSLD {
      * Extracts XSD schema from XSLD schema and writes to stream
      * @param outputStream stream used for writing resulting XSD
      */
-    public void extractXsd(@NotNull OutputStream outputStream) {
+    public void extractXsd(OutputStream outputStream) {
         Transformer transformer;
         try {
             transformer = TransformerFactory.newInstance().newTransformer();
@@ -78,7 +76,7 @@ public class XSLD {
      * @throws IOException
      * @return true if file matches schema
      */
-    public boolean verify(@NotNull File file, @Nullable ErrorListener listener) throws IOException, SAXException, ParserConfigurationException {
+    public boolean verify(File file, ErrorListener listener) throws IOException, SAXException, ParserConfigurationException {
         return verify(nodeFromFile(file), listener);
     }
 
@@ -88,7 +86,7 @@ public class XSLD {
      * @param listener error listener. Can be null
      * @return true if XML matches schema
      */
-    public boolean verify(@NotNull Element element, @Nullable ErrorListener listener){
+    public boolean verify(Element element, ErrorListener listener){
         throw new RuntimeException("Not implemented"); //TODO
     }
 

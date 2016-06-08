@@ -32,8 +32,7 @@ public class XsldParser {
         }
 
 
-        Element root = getRoot(schema);
-        if (root == null) throw new XsldException("No root found");
+        Element root = getRoot(schema).orElseThrow(() -> new XsldException("No root found"));
         lookupElement(root, new UnresolvedPath());
         System.out.printf("");
     }
@@ -42,9 +41,9 @@ public class XsldParser {
         return new LabelMap(pathLabels);
     }
 
-    private static Element getRoot(Element schema) {
+    private static Optional<Element> getRoot(Element schema) {
         return ElementUtils.childrenStreamByName(schema, XSD_NAMESPACE, "element")
-                .findFirst().orElse(null);
+                .findFirst();
     }
 
     /**
@@ -55,19 +54,19 @@ public class XsldParser {
     private void lookupElement(Element element, UnresolvedPath parentPath) throws XsldException {
         UnresolvedPath path = parentPath.append(element.getAttribute("name"));
         inspect(element, parentPath);
-        Element type;
+        Optional<Element> type;
         if (element.hasAttribute("type")) {
-            type = typeElements.get(element.getAttribute("type"));
+            type = Optional.ofNullable(typeElements.get(element.getAttribute("type")));
         } else {
-            type = ElementUtils.childrenStreamByName(element, XSD_NAMESPACE, "complexType").findAny().orElse(null);
+            type = ElementUtils.childrenStreamByName(element, XSD_NAMESPACE, "complexType").findAny();
         }
-        while (type != null) {
+        while (type.isPresent()) {
 
             //Collect attributes from type and restriction/extension
             Stream<Element> attributes = StreamUtils.concat(
-                    ElementUtils.childrenStreamByName(type, XSD_NAMESPACE, "attribute"),
+                    ElementUtils.childrenStreamByName(type.get(), XSD_NAMESPACE, "attribute"),
                     ElementUtils
-                            .childrenOneOf(type, XSD_NAMESPACE, "simpleContent", "complexContent")
+                            .childrenOneOf(type.get(), XSD_NAMESPACE, "simpleContent", "complexContent")
                             .flatMap(it -> ElementUtils.childrenOneOf(it, "restriction", "extension"))
                             .flatMap(it -> ElementUtils.childrenStreamByName(it, XSD_NAMESPACE, "attribute"))
             );
@@ -76,7 +75,7 @@ public class XsldParser {
             }
 
             //Collect elements everywhere
-            Stream<Element> childElems = ElementUtils.childrenOneOf(type, XSD_NAMESPACE,
+            Stream<Element> childElems = ElementUtils.childrenOneOf(type.get(), XSD_NAMESPACE,
                     "choice", "all", "sequence").flatMap( it ->
                     ElementUtils.childrenStreamByName(it, XSD_NAMESPACE, "element"));
             for (Element child : (Iterable<Element>) childElems::iterator) {
@@ -84,9 +83,9 @@ public class XsldParser {
             }
 
             //Search for inheritance
-            type = ElementUtils.childrenStreamByPath(type, XSD_NAMESPACE, "complexContent", "extension")
+            type = ElementUtils.childrenStreamByPath(type.get(), XSD_NAMESPACE, "complexContent", "extension")
                     .findAny()
-                    .map( it -> it.getAttribute("base")).map(typeElements::get).orElse(null);
+                    .map( it -> it.getAttribute("base")).map(typeElements::get);
         }
     }
 

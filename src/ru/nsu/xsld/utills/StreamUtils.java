@@ -12,7 +12,7 @@ public abstract class StreamUtils {
 
     @SafeVarargs
     public static <T> Stream<T> concat(Stream<T>... streams){
-        return Stream.of(streams).reduce(Stream::concat).orElse(null);
+        return Stream.of(streams).reduce(Stream::concat).orElse(Stream.empty());
     }
 
     public static <Q, T> Q foldLeft(Stream<T> stream, Q initial, BiFunction<Q,T,Q> accumulator){

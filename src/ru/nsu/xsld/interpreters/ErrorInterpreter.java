@@ -3,6 +3,7 @@ package ru.nsu.xsld.interpreters;
 import com.sun.istack.internal.Nullable;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Interface that is used to interpret errors defined in XSLD schema in &lt error ... &gt tags
@@ -16,5 +17,5 @@ public interface ErrorInterpreter {
      * @return string representing error message or null, if such error isn't interpreted by this interpreter
      */
     @Nullable
-    String interpret(String name, Map<String, String> arguments);
+    Optional<String> interpret(String name, Map<String, String> arguments);
 }
