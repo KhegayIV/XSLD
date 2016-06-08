@@ -57,11 +57,11 @@ public class UnresolvedPath extends ImmutableLinkedList<String, UnresolvedPath> 
 
     @Override
     protected UnresolvedPath produce(String last) {
-        return null;
+        return new UnresolvedPath(last);
     }
 
     @Override
     public UnresolvedPath append(String last) {
-        return null;
+        return new UnresolvedPath(this, last);
     }
 }
